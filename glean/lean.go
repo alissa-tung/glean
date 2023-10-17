@@ -63,6 +63,8 @@ func InstallLean() {
 	if err := cmd.Run(); err != nil {
 		panic(err)
 	}
+
+	_ = exec.Command("rm", "'"+filePath+"'").Run()
 }
 
 func buildReleaseName(version string) string {

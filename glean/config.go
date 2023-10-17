@@ -9,6 +9,8 @@ import (
 )
 
 const (
+	gleanVersion = "v0.0.0"
+
 	urlBase = "https://mirror.sjtu.edu.cn/elan"
 )
 
@@ -33,6 +35,7 @@ func getDotElanBaseDir() string {
 
 func InitFlags() {
 	flag.Usage = func() {
+		fmt.Println("glean " + gleanVersion)
 		fmt.Println("example usage:")
 		fmt.Println("\tglean -install elan -version 3.0.0")
 		fmt.Println("\tglean -install lean -version v4.2.0-rc2")
