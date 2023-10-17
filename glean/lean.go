@@ -28,7 +28,7 @@ func InstallLean() {
 	}(response.Body)
 
 	toolChainDir := filepath.Join(dotElanBaseDir, "toolchains", buildToolChainDirName(*version))
-	err = os.MkdirAll(toolChainDir, 755)
+	err = os.MkdirAll(toolChainDir, 0755)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -55,7 +55,7 @@ func InstallLean() {
 	case "windows":
 		cmd = exec.Command("Expand-Archive", "-Force", "'"+filePath+"'", "'"+toolChainDir+"'")
 	default:
-		cmd = exec.Command("unzip", "-f", "'"+filePath+"'", "-d", "'"+toolChainDir+"'")
+		cmd = exec.Command("unzip", "-f", filePath, "-d", toolChainDir)
 	}
 
 	log.Println("exec " + cmd.String())
@@ -64,7 +64,7 @@ func InstallLean() {
 		panic(err)
 	}
 
-	_ = exec.Command("rm", "'"+filePath+"'").Run()
+	_ = os.Remove(filePath)
 }
 
 func buildReleaseName(version string) string {

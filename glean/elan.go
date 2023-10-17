@@ -41,16 +41,17 @@ func InstallElan() {
 	var cmd *exec.Cmd
 	switch runtime.GOOS {
 	case "windows":
-		cmd = exec.Command("powershell", "-ExecutionPolicy Bypass", "-f", scriptPath)
+		cmd = exec.Command("powershell", "-ExecutionPolicy", "Bypass", "-f", scriptPath)
 	default:
-		cmd = exec.Command("/bin/sh", scriptPath, "-y", "--default-toolchain none")
+		cmd = exec.Command("/bin/sh", scriptPath, "-y", "--default-toolchain", "none")
 	}
 	log.Println("exec `" + cmd.String() + "`")
 
-	if out, err := cmd.Output(); err != nil {
-		fmt.Println(string(out))
+	o, err := cmd.CombinedOutput()
+	if err != nil {
 		panic(err)
-	} else {
-		fmt.Println(string(out))
 	}
+	fmt.Println(string(o))
+
+	_ = os.Remove(scriptPath)
 }
