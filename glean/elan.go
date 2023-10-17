@@ -1,0 +1,3 @@
+package glean
+
+func InstallElan() {}
