@@ -53,7 +53,7 @@ func InstallLean() {
 	var cmd *exec.Cmd
 	switch runtime.GOOS {
 	case "windows":
-		cmd = exec.Command("Expand-Archive", "-Force", "'"+filePath+"'", "'"+toolChainDir+"'")
+		cmd = exec.Command("Expand-Archive", "-Force", filePath, toolChainDir)
 	default:
 		cmd = exec.Command("unzip", "-f", filePath, "-d", toolChainDir)
 	}
