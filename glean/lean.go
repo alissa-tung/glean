@@ -58,7 +58,6 @@ func InstallLean() {
 
 	var cmd *exec.Cmd
 	_ = os.RemoveAll(finalToolChainDir)
-	_ = os.RemoveAll(tmpToolChainDir)
 	switch runtime.GOOS {
 	case "windows":
 		cmd = exec.Command("tar", "-xvf", filePath, "-C", tmpToolChainDir)
@@ -66,7 +65,7 @@ func InstallLean() {
 		cmd = exec.Command("unzip", filePath, "-d", tmpToolChainDir)
 	}
 
-	log.Println("exec " + cmd.String())
+	log.Println("exec `" + cmd.String() + "`")
 
 	if err := cmd.Run(); err != nil {
 		panic(err)
@@ -85,6 +84,7 @@ func InstallLean() {
 	}
 
 	_ = os.Remove(filePath)
+	_ = os.RemoveAll(tmpToolChainDir)
 }
 
 func buildReleaseName(version string) string {

@@ -41,6 +41,7 @@ var (
 		"https://github.com/avigad/mathematics_in_lean_source",
 		"https://github.com/leanprover-community/mathlib4",
 		"https://github.com/leanprover-community/ProofWidgets4",
+		"https://github.com/EdAyers/ProofWidgets4",
 		"https://github.com/gebner/quote4",
 		"https://github.com/leanprover/std4",
 	}
