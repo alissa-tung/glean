@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 )
@@ -15,13 +16,13 @@ type gitRepoSourceMirrorMapping struct {
 }
 
 func buildSjtuUrl(pkgName string) string {
-	return fmt.Sprintf("https://mirror.sjtu.edu.cn/git/lean4-packages/%s.git", pkgName)
+	return fmt.Sprintf("https://mirror.sjtu.edu.cn/git/lean4-packages/%s", pkgName)
 }
 
 func getRepoName(url string) string {
 	xs := strings.Split(url, "/")
-	xs = strings.Split(xs[len(xs)-1], ".")
-	return xs[0]
+	x := xs[len(xs)-1]
+	return x
 }
 
 func buildSourceToSjtu(url string) gitRepoSourceMirrorMapping {
@@ -33,14 +34,15 @@ func buildSourceToSjtu(url string) gitRepoSourceMirrorMapping {
 
 var (
 	repos = [...]string{
-		"https://github.com/JLimperg/aesop.git",
-		"https://github.com/leanprover/doc-gen4.git",
-		"https://github.com/leanprover/lean4-cli.git",
-		"https://github.com/avigad/mathematics_in_lean_source.git",
-		"https://github.com/leanprover-community/mathlib4.git",
-		"https://github.com/leanprover-community/ProofWidgets4.git",
-		"https://github.com/gebner/quote4.git",
-		"https://github.com/leanprover/std4.git",
+		"https://github.com/JLimperg/aesop",
+		"https://github.com/leanprover/doc-gen4",
+		"https://github.com/leanprover/lean4-cli",
+		"https://github.com/mhuisi/lean4-cli",
+		"https://github.com/avigad/mathematics_in_lean_source",
+		"https://github.com/leanprover-community/mathlib4",
+		"https://github.com/leanprover-community/ProofWidgets4",
+		"https://github.com/gebner/quote4",
+		"https://github.com/leanprover/std4",
 	}
 
 	mirrorRepos = func() []gitRepoSourceMirrorMapping {
@@ -57,17 +59,19 @@ func projectDir() string {
 }
 
 type lakePackage struct {
-	url  string `json:"url"`
-	rev  string `json:"rev"`
-	name string `json:"name"`
+	Url  string `json:"url"`
+	Rev  string `json:"rev"`
+	Name string `json:"name"`
 }
 
 type lakeGitPackage struct {
-	git lakePackage `json:"git"`
+	Git lakePackage `json:"git"`
 }
 
 type lakeManifest struct {
-	packages map[string]interface{} `json:"packages"`
+	Version     int              `json:"version"`
+	PackagesDir string           `json:"packagesDir"`
+	Packages    []lakeGitPackage `json:"packages"`
 }
 
 func readAndParse(url string) lakeManifest {
@@ -85,25 +89,39 @@ func readAndParse(url string) lakeManifest {
 
 func LakeSyncPackages() {
 	obj := readAndParse(*LakeManifestPath)
-	fmt.Println(obj)
 
 	var reposToClone []lakePackage
 
-	//for _, v := range obj.packages {
-	//	if mirrorUrl := findMirror(v.git.url); mirrorUrl != "" {
-	//		v.git.url = mirrorUrl
-	//		reposToClone = append(reposToClone, v.git)
-	//	}
-	//}
+	for _, v := range obj.Packages {
+		if mirrorUrl := findMirror(v.Git.Url); mirrorUrl != "" {
+			v.Git.Url = mirrorUrl
+			reposToClone = append(reposToClone, v.Git)
+		}
+	}
 
 	for _, v := range reposToClone {
-		log.Printf("repo to clone: %+v\n", v)
+		log.Printf("repo to clone: %v\n", v.Name)
+
+		target := filepath.Join(projectDir(), obj.PackagesDir, v.Name)
+		if err := os.RemoveAll(target); err != nil {
+			log.Println("Failed to remove `" + target + "`, " + err.Error())
+		}
+		cmd := exec.Command("git", "clone", v.Url, target)
+		if err := cmd.Run(); err != nil {
+			panic("Failed to clone `" + cmd.String() + "`, " + err.Error())
+		}
+		cmd = exec.Command("git", "-C", target, "checkout", v.Rev)
+		if err := cmd.Run(); err != nil {
+			panic("Failed to checkout `" + cmd.String() + "`, " + err.Error())
+		}
+
 	}
 }
 
 func findMirror(url string) string {
 	for _, v := range mirrorRepos {
-		if v.sourceUrl == url {
+
+		if v.sourceUrl == url || v.sourceUrl+".git" == url {
 			return v.mirrorUrl
 		}
 	}
