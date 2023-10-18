@@ -27,9 +27,9 @@
 #>
 param(
     [bool] $Verbose = 0,
-    [bool] $NoPrompt = 0,
+    [bool] $NoPrompt = 1,
     [bool] $NoModifyPath = 0,
-    [string] $DefaultToolchain = "",
+    [string] $DefaultToolchain = "none",
     [string] $ElanRoot = "https://mirror.sjtu.edu.cn/elan/elan/releases",
     [string] $ElanVersion = "3.0.0"
 )
