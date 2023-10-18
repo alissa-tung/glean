@@ -88,5 +88,5 @@ func buildReleasePostfix() string {
 }
 
 func buildToolChainDirName(version string) string {
-	return fmt.Sprintf("leanprover--lean4---%s", version)
+	return fmt.Sprintf("leanprover--lean4---v%s", version)
 }
