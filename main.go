@@ -17,7 +17,11 @@ func main() {
 		glean.InstallLean()
 
 	default:
-		fmt.Println("unknown command")
-		flag.Usage()
+		if *glean.LakeManifestPath != "" {
+			glean.LakeSyncPackages()
+		} else {
+			fmt.Println("unknown command")
+			flag.Usage()
+		}
 	}
 }

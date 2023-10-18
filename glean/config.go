@@ -15,8 +15,9 @@ const (
 )
 
 var (
-	Command = flag.String("install", "", "available: `elan`, `lean`")
-	version = flag.String("version", "", "example Elan version: `3.0.0` (without the `v` prefix); example Lean version: `4.1.0`, `4.2.0-rc2` (without the `v` prefix)")
+	Command          = flag.String("install", "", "available: `elan`, `lean`")
+	version          = flag.String("version", "", "example Elan version: `3.0.0` (without the `v` prefix); example Lean version: `4.1.0`, `4.2.0-rc2` (without the `v` prefix)")
+	LakeManifestPath = flag.String("lake-manifest-path", "", "")
 )
 
 var (
@@ -47,7 +48,7 @@ func InitFlags() {
 		flag.PrintDefaults()
 	}
 	flag.Parse()
-	if *version == "" {
+	if *Command != "" && *version == "" {
 		fmt.Println("invalid version")
 		flag.Usage()
 	}
