@@ -27,8 +27,14 @@ func InstallLean() {
 		}
 	}(response.Body)
 
-	toolChainDir := filepath.Join(dotElanBaseDir, "toolchains", buildToolChainDirName(*version))
-	err = os.MkdirAll(toolChainDir, 0755)
+	finalToolChainDir := filepath.Join(dotElanBaseDir, "toolchains", buildToolChainDirName(*version))
+	err = os.MkdirAll(finalToolChainDir, 0755)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	tmpToolChainDir := filepath.Join(dotElanBaseDir, "toolchains", "tmp")
+	err = os.MkdirAll(tmpToolChainDir, 0755)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -51,17 +57,31 @@ func InstallLean() {
 	}
 
 	var cmd *exec.Cmd
+	_ = os.RemoveAll(finalToolChainDir)
+	_ = os.RemoveAll(tmpToolChainDir)
 	switch runtime.GOOS {
 	case "windows":
-		cmd = exec.Command("tar", "-xvf", filePath, "-C", toolChainDir)
+		cmd = exec.Command("tar", "-xvf", filePath, "-C", tmpToolChainDir)
 	default:
-		cmd = exec.Command("unzip", "-f", filePath, "-d", toolChainDir)
+		cmd = exec.Command("unzip", filePath, "-d", tmpToolChainDir)
 	}
 
 	log.Println("exec " + cmd.String())
 
 	if err := cmd.Run(); err != nil {
 		panic(err)
+	}
+
+	oldPath := filepath.Join(
+		tmpToolChainDir,
+		fmt.Sprintf("lean-%s-%s", *version, buildReleasePostfix()),
+	)
+	if err := os.Rename(oldPath, finalToolChainDir); err != nil {
+		panic("Can not rename `" + oldPath + "` to `" + finalToolChainDir + "`")
+	}
+
+	if err != nil {
+		return
 	}
 
 	_ = os.Remove(filePath)
