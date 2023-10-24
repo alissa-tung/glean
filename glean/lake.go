@@ -35,6 +35,7 @@ func buildSourceToSjtu(url string) gitRepoSourceMirrorMapping {
 var (
 	repos = [...]string{
 		"https://github.com/JLimperg/aesop",
+		"https://github.com/leanprover-community/aesop",
 		"https://github.com/leanprover/doc-gen4",
 		"https://github.com/leanprover/lean4-cli",
 		"https://github.com/mhuisi/lean4-cli",
@@ -43,6 +44,7 @@ var (
 		"https://github.com/leanprover-community/ProofWidgets4",
 		"https://github.com/EdAyers/ProofWidgets4",
 		"https://github.com/gebner/quote4",
+		"https://github.com/leanprover-community/quote4",
 		"https://github.com/leanprover/std4",
 	}
 
