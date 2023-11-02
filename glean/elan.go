@@ -43,7 +43,8 @@ func InstallElan() {
 	case "windows":
 		cmd = exec.Command("powershell", "-ExecutionPolicy", "Bypass", "-f", scriptPath)
 	default:
-		cmd = exec.Command("/bin/sh", scriptPath, "-y", "--default-toolchain", "none")
+		cmd = exec.Command("/bin/sh", scriptPath, "-y", "--default-toolchain", "none", "&& echo PATH=\"$HOME/.elan/bin:$PATH\" >> $HOME/.zprofile")
+
 	}
 	log.Println("exec `" + cmd.String() + "`")
 
