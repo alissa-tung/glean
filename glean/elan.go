@@ -63,8 +63,6 @@ PATH="$HOME/.elan/bin:$PATH"
 		if err != nil {
 			log.Fatalf("append to zprofile error: " + err.Error())
 		}
-
-		log.Println("exec `" + cmd.String() + "`")
 	}
 	log.Println("exec `" + cmd.String() + "`")
 
