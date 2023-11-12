@@ -64,7 +64,10 @@ PATH="$HOME/.elan/bin:$PATH"
 			log.Fatalf("append to zprofile error: " + err.Error())
 		}
 
-		log.Println("exec `" + cmd.String() + "`")
+		
+	}
+	
+	log.Println("exec `" + cmd.String() + "`")
 
 		o, err := cmd.CombinedOutput()
 		if err != nil {
@@ -73,5 +76,4 @@ PATH="$HOME/.elan/bin:$PATH"
 		fmt.Println(string(o))
 
 		_ = os.Remove(scriptPath)
-	}
 }
