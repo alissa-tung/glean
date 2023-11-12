@@ -66,6 +66,8 @@ PATH="$HOME/.elan/bin:$PATH"
 
 		log.Println("exec `" + cmd.String() + "`")
 	}
+	log.Println("exec `" + cmd.String() + "`")
+
 	o, err := cmd.CombinedOutput()
 	if err != nil {
 		panic(err)
