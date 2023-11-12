@@ -65,13 +65,12 @@ PATH="$HOME/.elan/bin:$PATH"
 		}
 
 		log.Println("exec `" + cmd.String() + "`")
-
-		o, err := cmd.CombinedOutput()
-		if err != nil {
-			panic(err)
-		}
-		fmt.Println(string(o))
-
-		_ = os.Remove(scriptPath)
 	}
+	o, err := cmd.CombinedOutput()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(o))
+
+	_ = os.Remove(scriptPath)
 }
