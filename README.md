@@ -24,6 +24,14 @@ glean -install elan -version 3.0.0
 glean -install lean --version 4.1.0
 ```
 
+如需安装 nightly 版本，请以如下例子中的格式编辑命令。
+
+```
+glean -install lean --version 4.4.0-nightly-2023-11-12
+```
+
+nightly 可用版本参见 [lean4_nightly](https://s3.jcloud.sjtu.edu.cn/899a892efef34b1b944a19981040f55b-oss01/elan/leanprover/lean4_nightly/releases/download/mirror_clone_list.html)
+
 ## 在构建项目前下载依赖
 
 每当下载完一个 Lean 项目后，在启动 VSCode 或命令行运行 `lake build` 前，可以提前通过镜像下载依赖。
