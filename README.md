@@ -6,6 +6,8 @@
 请自行修改命令中的版本号，可用版本参见：
 http://mirror.sjtu.edu.cn/elan/?mirror_intel_list
 
+也可以通过这个链接下载 glean。
+
 ## 安装 Elan
 
 Elan 是 Lean 的版本管理工具，在 Lake 调用时根据项目 `lean-toolchain` 文件下载安装 Lean 并切换到对应的版本。
