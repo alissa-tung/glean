@@ -39,7 +39,7 @@ func InitFlags() {
 		fmt.Println("glean " + gleanVersion)
 		fmt.Println("example usage:")
 		fmt.Println("\tglean -install elan -version 3.0.0")
-		fmt.Println("\tglean -install lean -version v4.2.0-rc2")
+		fmt.Println("\tglean -install lean -version 4.2.0-rc2")
 		fmt.Println("Please refer to `https://mirror.sjtu.edu.cn/elan/?mirror_intel_list` for available versions")
 		_, err := fmt.Fprintf(flag.CommandLine.Output(), "Usage of %s:\n", os.Args[0])
 		if err != nil {
