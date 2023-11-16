@@ -30,7 +30,7 @@ glean -install lean --version 4.1.0
 glean -install lean --version 4.4.0-nightly-2023-11-12
 ```
 
-nightly 可用版本参见 [lean4_nightly](https://s3.jcloud.sjtu.edu.cn/899a892efef34b1b944a19981040f55b-oss01/elan/leanprover/lean4_nightly/releases/download/mirror_clone_list.html)
+nightly 可用版本参见 [lean4_nightly](http://mirror.sjtu.edu.cn/elan/leanprover/lean4_nightly/releases/download?mirror_intel_list)
 
 ## 在构建项目前下载依赖
 
