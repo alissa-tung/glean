@@ -67,14 +67,10 @@ type lakePackage struct {
 	Name string `json:"name"`
 }
 
-type lakeGitPackage struct {
-	Git lakePackage `json:"git"`
-}
-
 type lakeManifest struct {
-	Version     int              `json:"version"`
-	PackagesDir string           `json:"packagesDir"`
-	Packages    []lakeGitPackage `json:"packages"`
+	Version     int           `json:"version"`
+	PackagesDir string        `json:"packagesDir"`
+	Packages    []lakePackage `json:"packages"`
 }
 
 func readAndParse(url string) lakeManifest {
@@ -95,10 +91,16 @@ func LakeSyncPackages() {
 
 	var reposToClone []lakePackage
 
+	if len(obj.Packages) == 0 {
+		panic("empty packages in manifest json")
+	}
 	for _, v := range obj.Packages {
-		if mirrorUrl := findMirror(v.Git.Url); mirrorUrl != "" {
-			v.Git.Url = mirrorUrl
-			reposToClone = append(reposToClone, v.Git)
+		mirrorUrl := findMirror(v.Url)
+		if mirrorUrl != "" {
+			v.Url = mirrorUrl
+			reposToClone = append(reposToClone, v)
+		} else {
+			log.Println("failed to find mirror for: `" + v.Url + "`")
 		}
 	}
 
