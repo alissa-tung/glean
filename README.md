@@ -12,6 +12,14 @@ http://mirror.sjtu.edu.cn/elan/?mirror_intel_list
 
 Elan 是 Lean 的版本管理工具，在 Lake 调用时根据项目 `lean-toolchain` 文件下载安装 Lean 并切换到对应的版本。
 
+例如要阅读 Mathematics in Lean，可以运行
+
+```sh
+git clone --depth 1 https://mirror.sjtu.edu.cn/git/lean4-packages/mathematics_in_lean/
+```
+
+然后通过 `cat lean-toolchain` 获取需要安装的版本。
+
 ```
 glean -install elan -version 3.0.0
 ```
