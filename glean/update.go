@@ -3,6 +3,7 @@ package glean
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"net/http"
 	"io"
 	"io/ioutil"
@@ -34,13 +35,13 @@ func getLatestVersion() string {
 	
 	response, err := http.Get(urlBase + "/glean/releases/download/?mirror_intel_list")
 	if err != nil {
-		panic(err)
+		panic(err.Error())
 	}
 	defer response.Body.Close()
 
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		panic(err)
+		panic(err.Error())
 	}
 
 	bodyText := string(body)
@@ -90,8 +91,33 @@ func CheckUpdate() {
 	}(file)
 	_, err = io.Copy(file, response.Body)
 	if err != nil {
-		panic(err)
+		panic(err.Error())
 	}
-	fmt.Println("The update has been downloaded to", filePath, "\nPlease extract it manually and replace the old version.")
+	file.Close()
+	var cmd *exec.Cmd
+	gleantmpPath := filepath.Join(dotElanBaseDir, "bin", "glean.new")
+	err = os.MkdirAll(gleantmpPath, 0755)
+	if err != nil {
+		panic(err.Error())
+	}
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("tar", "-xvf", filePath, "-C", gleantmpPath)
+	default:
+		cmd = exec.Command("unzip", filePath, "-d", gleantmpPath)
+	}
+	if err := cmd.Run(); err != nil {
+		panic(err.Error())
+	}
+	err = os.Remove(filePath)
+	if err != nil {
+		panic(err.Error())
+	}
+	switch runtime.GOOS {
+	case "windows":
+		fmt.Printf("Please run the command `cp %s\\glean.exe %s`", gleantmpPath, dotElanBaseDir+"\\bin")
+	default:
+		fmt.Printf("Please run the command `cp %s/glean %s`", gleantmpPath, dotElanBaseDir+"/bin")
+	}
 	os.Exit(0)
 }

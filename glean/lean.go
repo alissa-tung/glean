@@ -63,7 +63,8 @@ func InstallLean() {
 	if err != nil {
 		panic(err)
 	}
-
+	file.Close()
+	
 	var cmd *exec.Cmd
 	_ = os.RemoveAll(finalToolChainDir)
 	switch runtime.GOOS {
