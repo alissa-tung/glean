@@ -100,12 +100,9 @@ func CheckUpdate() {
 	if err != nil {
 		panic(err.Error())
 	}
-	switch runtime.GOOS {
-	case "windows":
-		cmd = exec.Command("tar", "-xvf", filePath, "-C", gleantmpPath)
-	default:
-		cmd = exec.Command("unzip", filePath, "-d", gleantmpPath)
-	}
+
+	cmd = exec.Command("tar", "-xvf", filePath, "-C", gleantmpPath)
+
 	if err := cmd.Run(); err != nil {
 		panic(err.Error())
 	}
