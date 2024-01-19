@@ -110,11 +110,15 @@ func CheckUpdate() {
 	if err != nil {
 		panic(err.Error())
 	}
-	switch runtime.GOOS {
-	case "windows":
+	
+	if runtime.GOOS == "windows"{
 		fmt.Printf("Please run the command `cp %s\\glean.exe %s`", gleantmpPath, dotElanBaseDir+"\\bin")
-	default:
-		fmt.Printf("Please run the command `cp %s/glean %s`", gleantmpPath, dotElanBaseDir+"/bin")
+		os.Exit(0)
 	}
-	os.Exit(0)
+	
+	cmd = exec.Command("cp", gleantmpPath+"/glean", dotElanBaseDir+"/bin")
+	if err := cmd.Run(); err != nil {
+		panic(err.Error())
+	}
+	fmt.Println("glean has been updated to ", latestVersion)
 }
