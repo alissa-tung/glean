@@ -116,9 +116,11 @@ func CheckUpdate() {
 		os.Exit(0)
 	}
 	
+	os.Remove(dotElanBaseDir+"/bin/glean")
 	cmd = exec.Command("cp", gleantmpPath+"/glean", dotElanBaseDir+"/bin")
-	if err := cmd.Run(); err != nil {
-		panic(err.Error())
+	output, err := cmd.CombinedOutput()
+	if  err != nil {
+		panic(err)
 	}
 	fmt.Println("glean has been updated to ", latestVersion)
 }

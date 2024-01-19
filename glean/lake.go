@@ -77,7 +77,8 @@ type lakeManifest struct {
 func readAndParse(url string) lakeManifest {
 	file, err := os.ReadFile(url)
 	if err != nil {
-		panic("reading `" + url + "`, " + err.Error())
+		fmt.Println("reading `" + url + "`, " + err.Error())
+		os.Exit(0)
 	}
 
 	var obj lakeManifest
