@@ -8,7 +8,7 @@ import (
 
 func main() {
 	glean.InitFlags()
-
+	glean.CheckUpdate()
 	switch *glean.Command {
 	case "elan":
 		glean.InstallElan()
