@@ -59,7 +59,7 @@ func InstallLean() {
 			return
 		}
 	}(file)
-	_, err = io.Copy(file, response.Body)
+	_, err = io.Copy(file, response.Body) 
 	if err != nil {
 		panic(err)
 	}

@@ -2,10 +2,13 @@ package glean
 
 import (
 	"fmt"
+	"golang.org/x/text/cases"
+ 	"golang.org/x/text/language"
 	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -26,7 +29,8 @@ func buildGleanReleaseName() string {
 		name := fmt.Sprintf("glean_%s_%s.zip", "Windows", arch)
 		return name
 	default:
-		name := fmt.Sprintf("glean_%s_%s.tar.gz", strings.Title(runtime.GOOS), arch)
+		caser := cases.Title(language.Und)
+		name := fmt.Sprintf("glean_%s_%s.tar.gz", caser.String(runtime.GOOS), arch)
 		return name
 	}
 }
@@ -65,7 +69,8 @@ func CheckUpdate() {
 	fmt.Println("New version available:", latestVersion)
 
 	releaseName := buildGleanReleaseName()
-	response, err := http.Get(urlBase + "/glean/releases/download/" + latestVersion + "/" + releaseName)
+	releaseUrl, err := url.JoinPath(urlBase, "glean", "releases", "download", latestVersion, releaseName)
+	response, err := http.Get(releaseUrl)
 	if err != nil {
 		panic(err)
 	}
@@ -117,8 +122,8 @@ func CheckUpdate() {
 
 	os.Remove(dotElanBaseDir + "/bin/glean")
 	cmd = exec.Command("cp", gleantmpPath+"/glean", dotElanBaseDir+"/bin")
-	output, err := cmd.CombinedOutput()
-	if err != nil {
+	err = cmd.Run()
+	if  err != nil {
 		panic(err)
 	}
 	fmt.Println("glean has been updated to ", latestVersion)
