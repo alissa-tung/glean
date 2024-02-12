@@ -3,7 +3,7 @@ package glean
 import (
 	"fmt"
 	"golang.org/x/text/cases"
- 	"golang.org/x/text/language"
+	"golang.org/x/text/language"
 	"io"
 	"io/ioutil"
 	"log"
@@ -123,7 +123,7 @@ func CheckUpdate() {
 	os.Remove(dotElanBaseDir + "/bin/glean")
 	cmd = exec.Command("cp", gleantmpPath+"/glean", dotElanBaseDir+"/bin")
 	err = cmd.Run()
-	if  err != nil {
+	if err != nil {
 		panic(err)
 	}
 	fmt.Println("glean has been updated to ", latestVersion)
