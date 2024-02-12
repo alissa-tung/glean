@@ -2,25 +2,25 @@ package glean
 
 import (
 	"fmt"
-	"os"
-	"os/exec"
-	"net/http"
 	"io"
 	"io/ioutil"
-	"strings"
-	"runtime"
 	"log"
+	"net/http"
+	"os"
+	"os/exec"
 	"path/filepath"
+	"runtime"
+	"strings"
 )
 
 func buildGleanReleaseName() string {
 	var arch string
 	if runtime.GOARCH == "amd64" {
 		arch = "x86_64"
-	} else{
+	} else {
 		arch = "arm64"
 	}
-	
+
 	switch runtime.GOOS {
 	case "windows":
 		name := fmt.Sprintf("glean_%s_%s.zip", "Windows", arch)
@@ -32,7 +32,7 @@ func buildGleanReleaseName() string {
 }
 
 func getLatestVersion() string {
-	
+
 	response, err := http.Get(urlBase + "/glean/releases/download/?mirror_intel_list")
 	if err != nil {
 		panic(err.Error())
@@ -48,13 +48,12 @@ func getLatestVersion() string {
 	index := strings.Index(bodyText, "v0")
 	var latestVersion string
 	for index != -1 {
-		latestVersion = bodyText[index:index+6]
+		latestVersion = bodyText[index : index+6]
 		fmt.Println("Found latest version:", latestVersion)
 		break
 	}
 	return latestVersion
 }
-
 
 func CheckUpdate() {
 	fmt.Println("Checking for updates...")
@@ -110,16 +109,16 @@ func CheckUpdate() {
 	if err != nil {
 		panic(err.Error())
 	}
-	
-	if runtime.GOOS == "windows"{
+
+	if runtime.GOOS == "windows" {
 		fmt.Printf("Please run the command `cp %s\\glean.exe %s`", gleantmpPath, dotElanBaseDir+"\\bin")
 		os.Exit(0)
 	}
-	
-	os.Remove(dotElanBaseDir+"/bin/glean")
+
+	os.Remove(dotElanBaseDir + "/bin/glean")
 	cmd = exec.Command("cp", gleantmpPath+"/glean", dotElanBaseDir+"/bin")
 	output, err := cmd.CombinedOutput()
-	if  err != nil {
+	if err != nil {
 		panic(err)
 	}
 	fmt.Println("glean has been updated to ", latestVersion)
