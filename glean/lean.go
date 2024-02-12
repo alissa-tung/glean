@@ -15,8 +15,8 @@ import (
 func InstallLean() {
 	releaseName := buildReleaseName(*version)
 	var resourceUrl string
-	if strings.Contains(*version, "nightly"){
-		nightlyIndex := strings.Index(*version,"nightly")
+	if strings.Contains(*version, "nightly") {
+		nightlyIndex := strings.Index(*version, "nightly")
 		nightlyVersion := *version
 		resourceUrl = urlBase + "/leanprover/lean4_nightly/releases/download/" + nightlyVersion[nightlyIndex:] + "/" + releaseName
 	} else {
@@ -63,6 +63,7 @@ func InstallLean() {
 	if err != nil {
 		panic(err)
 	}
+	file.Close()
 
 	var cmd *exec.Cmd
 	_ = os.RemoveAll(finalToolChainDir)
@@ -116,10 +117,10 @@ func buildReleasePostfix() string {
 }
 
 func buildToolChainDirName(version string) string {
-	if strings.Contains(version, "nightly"){
-		nightlyVersion := version[strings.Index(version,"nightly"):]
+	if strings.Contains(version, "nightly") {
+		nightlyVersion := version[strings.Index(version, "nightly"):]
 		return fmt.Sprintf("leanprover--lean4---%s", nightlyVersion)
-	} else{
+	} else {
 		return fmt.Sprintf("leanprover--lean4---v%s", version)
 	}
 }
