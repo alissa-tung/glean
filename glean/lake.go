@@ -46,7 +46,7 @@ var (
 		"https://github.com/gebner/quote4",
 		"https://github.com/leanprover-community/quote4",
 		"https://github.com/leanprover/std4",
-		"https://github.com/leanprover/import-graph",
+		"https://github.com/leanprover-community/import-graph",
 	}
 
 	mirrorRepos = func() []gitRepoSourceMirrorMapping {
