@@ -9,8 +9,8 @@ import (
 func main() {
 	glean.InitFlags()
 	glean.GetLatestVersion()
-	
-	if (*glean.Update) {
+
+	if *glean.Update {
 		glean.CheckUpdate()
 	}
 	switch *glean.Command {
