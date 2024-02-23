@@ -35,7 +35,7 @@ func buildGleanReleaseName() string {
 	}
 }
 
-func getLatestVersion() string {
+func GetLatestVersion() string {
 
 	response, err := http.Get(urlBase + "/glean/releases/download/?mirror_intel_list")
 	if err != nil {
@@ -52,7 +52,7 @@ func getLatestVersion() string {
 	index := strings.Index(bodyText, "v0")
 	var latestVersion string
 	for index != -1 {
-		latestVersion = bodyText[index : index+6]
+		latestVersion = bodyText[index : index+7]
 		fmt.Println("Found latest version:", latestVersion)
 		break
 	}
@@ -61,7 +61,7 @@ func getLatestVersion() string {
 
 func CheckUpdate() {
 	fmt.Println("Checking for updates...")
-	latestVersion := getLatestVersion()
+	latestVersion := GetLatestVersion()
 	if latestVersion == gleanVersion {
 		fmt.Println("Already up to date")
 		return

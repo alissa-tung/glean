@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	gleanVersion = "v0.1.9"
+	gleanVersion = "v0.1.10"
 
 	urlBase = "https://mirror.sjtu.edu.cn/elan"
 )
@@ -18,6 +18,7 @@ var (
 	Command          = flag.String("install", "", "available: `elan`, `lean`")
 	version          = flag.String("version", "", "example Elan version: `3.0.0` (without the `v` prefix); example Lean version: `4.1.0`, `4.2.0-rc2` (without the `v` prefix)")
 	LakeManifestPath = flag.String("lake-manifest-path", "./lake-manifest.json", "")
+	Update 			 = flag.Bool("update", "false", "update glean")
 )
 
 var (

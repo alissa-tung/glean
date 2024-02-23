@@ -8,7 +8,11 @@ import (
 
 func main() {
 	glean.InitFlags()
-	glean.CheckUpdate()
+	glean.GetLatestVersion()
+	if glean.Update {
+		glean.CheckUpdate()
+	}
+	~
 	switch *glean.Command {
 	case "elan":
 		glean.InstallElan()
