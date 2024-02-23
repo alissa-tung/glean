@@ -31,7 +31,7 @@ param(
     [bool] $NoModifyPath = 0,
     [string] $DefaultToolchain = "none",
     [string] $ElanRoot = "https://mirror.sjtu.edu.cn/elan/elan/releases",
-    [string] $ElanVersion = "3.0.0"
+    [string] $ElanVersion = "3.1.1"
 )
 
 # There are no Windows ARM releases yet, use emulated x64
