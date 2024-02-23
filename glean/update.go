@@ -54,6 +54,7 @@ func GetLatestVersion() string {
 	for index != -1 {
 		latestVersion = bodyText[index : index+7]
 		fmt.Println("Found latest version:", latestVersion)
+		fmt.Println("run `glean -update` to update")
 		break
 	}
 	return latestVersion
