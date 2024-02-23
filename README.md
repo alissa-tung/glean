@@ -21,7 +21,7 @@ git clone --depth 1 https://mirror.sjtu.edu.cn/git/lean4-packages/mathematics_in
 然后通过 `cat lean-toolchain` 获取需要安装的版本。
 
 ```
-glean -install elan -version 3.0.0
+glean -install elan -version 3.1.1
 ```
 
 ## 安装 Lean
@@ -29,7 +29,7 @@ glean -install elan -version 3.0.0
 以下操作会安装 Lean 与 Lean 工具链，包含语言服务器、构建工具等。
 
 ```
-glean -install lean --version 4.1.0
+glean -install lean --version 4.5.0
 ```
 
 如需安装 nightly 版本，请以如下例子中的格式编辑命令。

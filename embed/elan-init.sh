@@ -16,7 +16,7 @@
 set -u
 
 ELAN_UPDATE_ROOT="https://mirror.sjtu.edu.cn/elan/elan/releases"
-_latest="${_latest:=v3.0.0}"
+_latest="${_latest:=v3.1.1}"
 
 #XXX: If you change anything here, please make the same changes in setup_mode.rs
 usage() {
@@ -187,6 +187,9 @@ get_architecture() {
     if [ "$_ostype" = Linux ]; then
         if [ "$(uname -o)" = Android ]; then
             local _ostype=Android
+        fi
+        if ldd --version 2>&1 | grep -q 'musl'; then
+            err "musl-based systems are unsupported at the moment"
         fi
     fi
 
