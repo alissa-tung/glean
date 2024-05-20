@@ -89,28 +89,43 @@ func readAndParse(url string) lakeManifest {
 	return obj
 }
 
+type lakePackageWithAlias struct {
+	lakePkg lakePackage
+	alias   *string
+}
+
 func LakeSyncPackages() {
 	obj := readAndParse(*LakeManifestPath)
 
-	var reposToClone []lakePackage
+	var reposToClone []lakePackageWithAlias
 
 	if len(obj.Packages) == 0 {
 		panic("empty packages in manifest json")
 	}
 	for _, v := range obj.Packages {
-		mirrorUrl := findMirror(v.Url)
+		mirrorUrl, alias := findMirror(v.Url)
 		if mirrorUrl != "" {
 			v.Url = mirrorUrl
-			reposToClone = append(reposToClone, v)
+			reposToClone = append(reposToClone, lakePackageWithAlias{
+				lakePkg: v,
+				alias:   alias,
+			})
 		} else {
 			log.Println("failed to find mirror for: `" + v.Url + "`")
 		}
 	}
 
-	for _, v := range reposToClone {
+	for _, pkgWith := range reposToClone {
+		v := pkgWith.lakePkg
 		log.Printf("repo to clone: %v\n", v.Name)
 
-		target := filepath.Join(projectDir(), obj.PackagesDir, v.Name)
+		var target string
+		if pkgWith.alias == nil {
+			target = filepath.Join(projectDir(), obj.PackagesDir, v.Name)
+		} else {
+			target = filepath.Join(projectDir(), obj.PackagesDir, *pkgWith.alias)
+		}
+
 		if err := os.RemoveAll(target); err != nil {
 			log.Println("Failed to remove `" + target + "`, " + err.Error())
 		}
@@ -126,12 +141,16 @@ func LakeSyncPackages() {
 	}
 }
 
-func findMirror(url string) string {
+func findMirror(url string) (string, *string) {
 	for _, v := range mirrorRepos {
+		if strings.Contains(url, "batteries") {
+			alias := "batteries"
+			return "https://mirror.sjtu.edu.cn/git/lean4-packages/std4/", &alias
+		}
 
 		if v.sourceUrl == url || v.sourceUrl+".git" == url {
-			return v.mirrorUrl
+			return v.mirrorUrl, nil
 		}
 	}
-	return ""
+	return "", nil
 }
