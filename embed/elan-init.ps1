@@ -31,7 +31,8 @@ param(
     [bool] $NoModifyPath = 0,
     [string] $DefaultToolchain = "none",
     [string] $ElanRoot = "https://mirror.sjtu.edu.cn/elan/elan/releases",
-    [string] $ElanVersion = "3.1.1"
+    # [string] $ElanVersion = "v3.1.1"
+    [string] $ElanVersion = "eager-resolution-v2"
 )
 
 # There are no Windows ARM releases yet, use emulated x64
@@ -49,7 +50,7 @@ Write-Host "info: downloading installer to ${temp}"
 try {
     [string] $DownloadUrl = ""
     if ($ElanVersion.Length -gt 0) {
-        $DownloadUrl = "$ElanRoot/download/v$ElanVersion/elan-$_arch.zip"
+        $DownloadUrl = "$ElanRoot/download/$ElanVersion/elan-$_arch.zip"
     }
     else {
         $DownloadUrl = "$ElanRoot/latest/download/elan-$_arch.zip"
