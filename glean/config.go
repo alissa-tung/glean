@@ -16,7 +16,7 @@ const (
 
 var (
 	Command          = flag.String("install", "", "available: `elan`, `lean`")
-	version          = flag.String("version", "", "example Elan version: `3.1.1` (without the `v` prefix); example Lean version: `4.1.0`, `4.2.0-rc2` (without the `v` prefix)")
+	version          = flag.String("version", "", "example Elan version: `v3.1.1` (with 'v' prefix); example Lean version: `4.1.0`, `4.2.0-rc2` (without the `v` prefix)")
 	LakeManifestPath = flag.String("lake-manifest-path", "./lake-manifest.json", "")
 	Update           = flag.Bool("update", false, "update glean")
 )

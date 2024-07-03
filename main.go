@@ -9,7 +9,7 @@ import (
 func main() {
 	glean.InitFlags()
 	glean.GetLatestVersion()
-
+	fmt.Println("Please refer to `https://mirror.sjtu.edu.cn/elan/?mirror_intel_list` for available versions")
 	if *glean.Update {
 		glean.CheckUpdate()
 	}
