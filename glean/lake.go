@@ -3,7 +3,9 @@ package glean
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -137,8 +139,42 @@ func LakeSyncPackages() {
 		if err := cmd.Run(); err != nil {
 			panic("Failed to checkout `" + cmd.String() + "`, " + err.Error())
 		}
-
+		if v.Name == "proofwidgets" {
+			fmt.Println("Fetching ProofWidgets4 cloud release to" + target)
+			FetchProofWidgetsRelease(v.Rev, target)
+		}
 	}
+}
+
+func FetchProofWidgetsRelease(version string, path string) {
+	resourceUrl := urlBase + "proofwidgets/releases/download/" + version + "/ProofWidgets4.tar.gz"
+	response, err := http.Get(resourceUrl)
+	if err != nil {
+		panic("http.Get error: " + err.Error() + ", resourceUrl = `" + resourceUrl + "`")
+	}
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			return
+		}
+	}(response.Body)
+
+	filePath := filepath.Join(path, "ProofWidgets4.tar.gz")
+	file, err := os.Create(filePath)
+	if err != nil {
+		panic("os.Create: " + err.Error() + ", " + "filePath = `" + filePath + "`")
+	}
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			return
+		}
+	}(file)
+	_, err = io.Copy(file, response.Body)
+	if err != nil {
+		panic(err)
+	}
+	file.Close()
 }
 
 func findMirror(url string) (string, *string) {
