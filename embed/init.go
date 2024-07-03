@@ -6,10 +6,10 @@ import (
 )
 
 //go:embed elan-init.ps1
-var InitWindows []byte
+var InitWindows string
 
 //go:embed elan-init.sh
-var InitUnix []byte
+var InitUnix string
 
 func InitScriptName() string {
 	switch runtime.GOOS {
@@ -20,7 +20,7 @@ func InitScriptName() string {
 	}
 }
 
-func InitScriptBytes() []byte {
+func InitScriptBytes() string {
 	switch runtime.GOOS {
 	case "windows":
 		return InitWindows

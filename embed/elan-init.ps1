@@ -32,7 +32,7 @@ param(
     [string] $DefaultToolchain = "none",
     [string] $ElanRoot = "https://mirror.sjtu.edu.cn/elan/elan/releases",
     # [string] $ElanVersion = "v3.1.1"
-    [string] $ElanVersion = "eager-resolution-v2"
+    [string] $ElanVersion = "__INPUT_VERSION__"
 )
 
 # There are no Windows ARM releases yet, use emulated x64
