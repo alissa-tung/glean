@@ -17,7 +17,7 @@ set -u
 
 ELAN_UPDATE_ROOT="https://mirror.sjtu.edu.cn/elan/elan/releases"
 # _latest="${_latest:=v3.1.1}"
-_latest="${_latest:=eager-resolution-v2}"
+_latest="${_latest:=__INPUT_VERSION__}"
 
 #XXX: If you change anything here, please make the same changes in setup_mode.rs
 usage() {

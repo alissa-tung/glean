@@ -9,6 +9,7 @@ import (
 	"path"
 	"path/filepath"
 	"runtime"
+	"strings"
 )
 
 func InstallElan() {
@@ -32,8 +33,7 @@ func InstallElan() {
 				return
 			}
 		}(file)
-
-		_, err = file.Write(embed.InitScriptBytes())
+		_, err = file.WriteString(strings.Replace(embed.InitScriptBytes(), "__INPUT_VERSION__", *version, 1))
 		if err != nil {
 			panic(err)
 		}
@@ -69,9 +69,10 @@ PATH="$HOME/.elan/bin:$PATH"
 
 	o, err := cmd.CombinedOutput()
 	if err != nil {
+		log.Println(string(o))
 		panic(err)
 	}
 	fmt.Println(string(o))
-
+	// No defer makes user able to run script manully when panic.
 	_ = os.Remove(scriptPath)
 }
