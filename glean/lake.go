@@ -3,7 +3,9 @@ package glean
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -64,15 +66,17 @@ func projectDir() string {
 }
 
 type lakePackage struct {
-	Url  string `json:"url"`
-	Rev  string `json:"rev"`
-	Name string `json:"name"`
+	Url      string `json:"url"`
+	Rev      string `json:"rev"`
+	Name     string `json:"name"`
+	InputRev string `json:"inputRev"`
 }
 
 type lakeManifest struct {
 	Version     int           `json:"version"`
 	PackagesDir string        `json:"packagesDir"`
 	Packages    []lakePackage `json:"packages"`
+	LakeDir     string        `json:"lakeDir"`
 }
 
 func readAndParse(url string) lakeManifest {
@@ -137,8 +141,46 @@ func LakeSyncPackages() {
 		if err := cmd.Run(); err != nil {
 			panic("Failed to checkout `" + cmd.String() + "`, " + err.Error())
 		}
-
+		if v.Name == "proofwidgets" {
+			fmt.Println("Fetching ProofWidgets4 cloud release to " + filepath.Join(target, obj.PackagesDir))
+			FetchProofWidgetsRelease(v.InputRev, filepath.Join(target, obj.LakeDir))
+		}
 	}
+}
+
+func FetchProofWidgetsRelease(version string, path string) {
+	resourceUrl := urlBase + "/proofwidgets/releases/download/" + version + "/ProofWidgets4.tar.gz"
+	fmt.Println("Fetching from " + resourceUrl)
+	response, err := http.Get(resourceUrl)
+	if err != nil {
+		panic("http.Get error: " + err.Error() + ", resourceUrl = `" + resourceUrl + "`")
+	}
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			return
+		}
+	}(response.Body)
+	err = os.Mkdir(path, os.ModePerm)
+	if os.IsExist(err) {
+		fmt.Println(path + "is already exist")
+	}
+	filePath := filepath.Join(path, "ProofWidgets4.tar.gz")
+	file, err := os.Create(filePath)
+	if err != nil {
+		panic("os.Create: " + err.Error() + ", " + "filePath = `" + filePath + "`")
+	}
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			return
+		}
+	}(file)
+	_, err = io.Copy(file, response.Body)
+	if err != nil {
+		panic(err)
+	}
+	file.Close()
 }
 
 func findMirror(url string) (string, *string) {
