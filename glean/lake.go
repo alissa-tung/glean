@@ -66,15 +66,17 @@ func projectDir() string {
 }
 
 type lakePackage struct {
-	Url  string `json:"url"`
-	Rev  string `json:"rev"`
-	Name string `json:"name"`
+	Url      string `json:"url"`
+	Rev      string `json:"rev"`
+	Name     string `json:"name"`
+	InputRev string `json:"inputRev"`
 }
 
 type lakeManifest struct {
 	Version     int           `json:"version"`
 	PackagesDir string        `json:"packagesDir"`
 	Packages    []lakePackage `json:"packages"`
+	LakeDir     string        `json:"lakeDir"`
 }
 
 func readAndParse(url string) lakeManifest {
@@ -140,14 +142,15 @@ func LakeSyncPackages() {
 			panic("Failed to checkout `" + cmd.String() + "`, " + err.Error())
 		}
 		if v.Name == "proofwidgets" {
-			fmt.Println("Fetching ProofWidgets4 cloud release to" + target)
-			FetchProofWidgetsRelease(v.Rev, target)
+			fmt.Println("Fetching ProofWidgets4 cloud release to " + filepath.Join(target, obj.PackagesDir))
+			FetchProofWidgetsRelease(v.InputRev, filepath.Join(target, obj.LakeDir))
 		}
 	}
 }
 
 func FetchProofWidgetsRelease(version string, path string) {
-	resourceUrl := urlBase + "proofwidgets/releases/download/" + version + "/ProofWidgets4.tar.gz"
+	resourceUrl := urlBase + "/proofwidgets/releases/download/" + version + "/ProofWidgets4.tar.gz"
+	fmt.Println("Fetching from " + resourceUrl)
 	response, err := http.Get(resourceUrl)
 	if err != nil {
 		panic("http.Get error: " + err.Error() + ", resourceUrl = `" + resourceUrl + "`")
@@ -158,7 +161,10 @@ func FetchProofWidgetsRelease(version string, path string) {
 			return
 		}
 	}(response.Body)
-
+	err = os.Mkdir(path, os.ModePerm)
+	if os.IsExist(err) {
+		fmt.Println(path + "is already exist")
+	}
 	filePath := filepath.Join(path, "ProofWidgets4.tar.gz")
 	file, err := os.Create(filePath)
 	if err != nil {
