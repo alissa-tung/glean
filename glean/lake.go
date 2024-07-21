@@ -73,7 +73,7 @@ type lakePackage struct {
 }
 
 type lakeManifest struct {
-	Version     int           `json:"version"`
+	Version     string        `json:"version"`
 	PackagesDir string        `json:"packagesDir"`
 	Packages    []lakePackage `json:"packages"`
 	LakeDir     string        `json:"lakeDir"`
