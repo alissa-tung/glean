@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	gleanVersion = "v0.1.16"
+	gleanVersion = "v0.1.17"
 
 	urlBase = "https://mirror.sjtu.edu.cn/elan"
 )
