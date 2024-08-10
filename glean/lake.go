@@ -155,6 +155,9 @@ func FetchProofWidgetsRelease(version string, path string) {
 	if err != nil {
 		panic("http.Get error: " + err.Error() + ", resourceUrl = `" + resourceUrl + "`")
 	}
+	if response.StatusCode != http.StatusOK {
+		panic("http.Get error")
+	}
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
