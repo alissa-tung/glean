@@ -73,7 +73,7 @@ type lakePackage struct {
 }
 
 type lakeManifest struct {
-	Version     string        `json:"version"`
+	Version     interface{}   `json:"version"`
 	PackagesDir string        `json:"packagesDir"`
 	Packages    []lakePackage `json:"packages"`
 	LakeDir     string        `json:"lakeDir"`
@@ -154,6 +154,9 @@ func FetchProofWidgetsRelease(version string, path string) {
 	response, err := http.Get(resourceUrl)
 	if err != nil {
 		panic("http.Get error: " + err.Error() + ", resourceUrl = `" + resourceUrl + "`")
+	}
+	if response.StatusCode != http.StatusOK {
+		panic("http.Get error")
 	}
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
