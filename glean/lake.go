@@ -183,16 +183,11 @@ func FetchProofWidgetsRelease(version string, path string) {
 	if err != nil {
 		panic(err)
 	}
-	file.Close()
+	_ = file.Close()
 }
 
 func findMirror(url string) (string, *string) {
 	for _, v := range mirrorRepos {
-		if strings.Contains(url, "batteries") {
-			alias := "batteries"
-			return "https://mirror.sjtu.edu.cn/git/lean4-packages/std4/", &alias
-		}
-
 		if v.sourceUrl == url || v.sourceUrl+".git" == url {
 			return v.mirrorUrl, nil
 		}
