@@ -149,7 +149,6 @@ func LakeSyncPackages() {
 }
 
 func FetchProofWidgetsRelease(version string, path string) {
-	// resourceUrl := urlBase + "/proofwidgets/releases/download/" + version + "/ProofWidgets4.tar.gz"
 	resourceUrl := urlBase + "/proofwidgets/releases/download/" + version + "?mirror_intel_list"
 	fmt.Println("Fetching from " + resourceUrl)
 	response, err := http.Get(resourceUrl)
