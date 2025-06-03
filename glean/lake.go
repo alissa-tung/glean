@@ -149,12 +149,27 @@ func LakeSyncPackages() {
 }
 
 func FetchProofWidgetsRelease(version string, path string) {
-	resourceUrl := urlBase + "/proofwidgets/releases/download/" + version + "/ProofWidgets4.tar.gz"
+	// resourceUrl := urlBase + "/proofwidgets/releases/download/" + version + "/ProofWidgets4.tar.gz"
+	resourceUrl := urlBase + "/proofwidgets/releases/download/" + version + "?mirror_intel_list"
 	fmt.Println("Fetching from " + resourceUrl)
 	response, err := http.Get(resourceUrl)
 	if err != nil {
 		panic("http.Get error: " + err.Error() + ", resourceUrl = `" + resourceUrl + "`")
 	}
+	redirectUrl := response.Request.URL.String()
+	finalUrl := strings.Replace(redirectUrl, "mirror_clone_list.html", "ProofWidgets4.tar.gz", 1)
+	log.Println("will get `" + finalUrl + "`")
+	response, err = http.Get(finalUrl)
+	if err != nil {
+		panic("http.Get error: " + err.Error() + ", resourceUrl = `" + finalUrl + "`")
+	}
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			return
+		}
+	}(response.Body)
+
 	if response.StatusCode != http.StatusOK {
 		panic("http.Get error")
 	}

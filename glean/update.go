@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -70,10 +69,24 @@ func CheckUpdate() {
 	fmt.Println("New version available:", latestVersion)
 
 	releaseName := buildGleanReleaseName()
-	releaseUrl, err := url.JoinPath(urlBase, "glean", "releases", "download", latestVersion, releaseName)
+	releaseUrl := urlBase + "/glean/releases/download/" + latestVersion + "?mirror_intel_list"
 	response, err := http.Get(releaseUrl)
 	if err != nil {
 		panic(err)
+	}
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			return
+		}
+	}(response.Body)
+
+	redirectUrl := response.Request.URL.String()
+	finalUrl := strings.Replace(redirectUrl, "mirror_clone_list.html", releaseName, 1)
+	log.Println("will get `" + finalUrl + "`")
+	response, err = http.Get(finalUrl)
+	if err != nil {
+		panic("http.Get error: " + err.Error() + ", resourceUrl = `" + finalUrl + "`")
 	}
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
