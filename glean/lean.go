@@ -18,15 +18,29 @@ func InstallLean() {
 	if strings.Contains(*version, "nightly") {
 		nightlyIndex := strings.Index(*version, "nightly")
 		nightlyVersion := *version
-		resourceUrl = urlBase + "/leanprover/lean4_nightly/releases/download/" + nightlyVersion[nightlyIndex:] + "/" + releaseName
+		resourceUrl = urlBase + "/leanprover/lean4_nightly/releases/download/" + nightlyVersion[nightlyIndex:] + "?mirror_intel_list"
 	} else {
-		resourceUrl = urlBase + "/leanprover/lean4/releases/download/v" + *version + "/" + releaseName
+		resourceUrl = urlBase + "/leanprover/lean4/releases/download/v" + *version + "?mirror_intel_list"
 	}
 	log.Println("will get `" + resourceUrl + "`")
 
 	response, err := http.Get(resourceUrl)
 	if err != nil {
 		panic("http.Get error: " + err.Error() + ", resourceUrl = `" + resourceUrl + "`")
+	}
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			return
+		}
+	}(response.Body)
+
+	redirectUrl := response.Request.URL.String()
+	finalUrl := strings.Replace(redirectUrl, "mirror_clone_list.html", releaseName, 1)
+	log.Println("will get `" + finalUrl + "`")
+	response, err = http.Get(finalUrl)
+	if err != nil {
+		panic("http.Get error: " + err.Error() + ", resourceUrl = `" + finalUrl + "`")
 	}
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
